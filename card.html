@@ -16,36 +16,58 @@ body{background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display
 .title{color:#fff;font-size:26px;font-weight:700;margin-bottom:8px}
 .sub{color:rgba(255,255,255,0.7);font-size:14px;margin-bottom:32px}
 .card{background:#fff;border-radius:24px;padding:32px;box-shadow:0 8px 40px rgba(0,0,0,0.15)}
-.wx-id{font-size:42rpx;font-weight:700;color:#333;margin:24rpx 0;word-break:break-all}
-.wx-label{font-size:14px;color:#999;margin-bottom:8px}
-.hint{color:#666;font-size:13px;margin-top:24px;line-height:1.8;background:#f5f5f5;border-radius:12px;padding:16px}
+.qr-wrap{background:#fff;padding:16px;border-radius:16px;display:inline-block;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.qr-wrap img{width:240px;height:240px;display:block}
+.wx-id{font-size:32rpx;font-weight:700;color:#333;margin:24rpx 0;word-break:break-all}
+.wx-label{font-size:14px;color:#999;margin-top:24px;margin-bottom:8px}
 .btn{display:block;width:100%;margin-top:16px;padding:16px;background:#07C160;color:#fff;border:none;border-radius:14px;font-size:18px;font-weight:600;cursor:pointer}
 .btn:active{opacity:0.85}
+.hint{color:#666;font-size:13px;margin-top:24px;line-height:1.8;background:#f5f5f5;border-radius:12px;padding:16px}
 .toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.85);color:#fff;padding:14px 28px;border-radius:10px;font-size:15px;opacity:0;transition:opacity .3s;z-index:99;pointer-events:none}
 .toast.show{opacity:1}
 </style>
 </head>
 <body>
-<div class="page" id="app">
+<div class="page">
   <div class="title">🤝 添加好友</div>
-  <div class="sub" id="subtitle">复制下方微信号，打开微信添加</div>
+  <div class="sub">长按识别二维码 或 复制微信号</div>
   <div class="card">
+    <div class="qr-wrap">
+      <img id="qrImg" src="" alt="二维码" />
+    </div>
     <div class="wx-label">微信号</div>
     <div class="wx-id" id="wxId">加载中...</div>
     <button class="btn" onclick="copyWx()">📋 复制微信号</button>
     <div class="hint">
       <strong>怎么添加？</strong><br>
-      1. 点上方按钮复制微信号<br>
-      2. 打开微信 → 右上角 + → 添加朋友<br>
-      3. 粘贴微信号搜索 → 添加好友 ✅
+      1. 长按上方二维码 → 识别 → 添加好友<br>
+      2. 或点下方按钮复制微信号<br>
+      3. 打开微信 → 搜索 → 添加 ✅
     </div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-var wxId = new URLSearchParams(location.search).get('wx') || '未设置';
+var params = new URLSearchParams(location.search);
+var wxId = params.get('wx') || '未设置';
+var imgUrl = params.get('img');
+
+// 显示微信号
 document.getElementById('wxId').textContent = wxId;
+
+// 加载二维码
+var qrEl = document.getElementById('qrImg');
+if (imgUrl) {
+  qrEl.src = imgUrl;
+} else {
+  // 用 API 生成 QR 码（基于微信号文本）
+  qrEl.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(wxId);
+}
+
+qrEl.onerror = function () {
+  this.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=WeChat';
+};
 
 function copyWx() {
   var id = document.getElementById('wxId').textContent;
