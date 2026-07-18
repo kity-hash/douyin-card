@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>添加好友</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:-apple-system,sans-serif;padding:20px}
+.page{text-align:center;max-width:450px;width:100%}
+.title{color:#fff;font-size:26px;font-weight:700;margin-bottom:8px}
+.sub{color:rgba(255,255,255,0.7);font-size:14px;margin-bottom:32px}
+.card{background:#fff;border-radius:24px;padding:32px;box-shadow:0 8px 40px rgba(0,0,0,0.15)}
+.qr-wrap{position:relative;display:inline-block}
+.qr-wrap img{width:280px;height:280px;border-radius:16px;display:block}
+.hint{color:#666;font-size:13px;margin-top:16px;line-height:1.8}.hint strong{color:#333}
+.btn{display:block;width:100%;margin-top:20px;padding:14px;background:#07C160;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer}
+.btn:active{opacity:0.85}
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.8);color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;opacity:0;transition:opacity 0.3s;z-index:99}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="title">🤝 添加好友</div>
+  <div class="sub">长按下方二维码添加微信</div>
+  <div class="card">
+    <div class="qr-wrap">
+      <img src="qrcode.png" alt="微信二维码" id="qrImg" />
+    </div>
+    <div class="hint">
+      <strong>长按识别二维码</strong><br>
+      添加微信好友 · 获取更多内容
+    </div>
+    <button class="btn" onclick="saveImg()">💾 保存二维码到相册</button>
+  </div>
+</div>
+<div class="toast" id="toast">请长按二维码图片保存</div>
+
+<script>
+function saveImg() {
+  var toast = document.getElementById('toast');
+  toast.textContent = '请长按上方二维码图片 → 保存到相册 → 微信扫一扫添加';
+  toast.classList.add('show');
+  setTimeout(function(){ toast.classList.remove('show'); }, 3000);
+}
+</script>
+</body>
+</html>
