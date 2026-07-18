@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta property="og:title" content="点击查看完整资料">
+<meta property="og:description" content="每日知识分享 · 点击了解详情">
+<meta property="og:image" content="https://kity-hash.github.io/douyin-card/preview.png">
+<meta property="og:url" content="https://kity-hash.github.io/douyin-card/card.html">
+<meta property="og:type" content="website">
 <title>添加好友</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -11,38 +16,57 @@ body{background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;display
 .title{color:#fff;font-size:26px;font-weight:700;margin-bottom:8px}
 .sub{color:rgba(255,255,255,0.7);font-size:14px;margin-bottom:32px}
 .card{background:#fff;border-radius:24px;padding:32px;box-shadow:0 8px 40px rgba(0,0,0,0.15)}
-.qr-wrap{position:relative;display:inline-block}
-.qr-wrap img{width:280px;height:280px;border-radius:16px;display:block}
-.hint{color:#666;font-size:13px;margin-top:16px;line-height:1.8}.hint strong{color:#333}
-.btn{display:block;width:100%;margin-top:20px;padding:14px;background:#07C160;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer}
+.wx-id{font-size:42rpx;font-weight:700;color:#333;margin:24rpx 0;word-break:break-all}
+.wx-label{font-size:14px;color:#999;margin-bottom:8px}
+.hint{color:#666;font-size:13px;margin-top:24px;line-height:1.8;background:#f5f5f5;border-radius:12px;padding:16px}
+.btn{display:block;width:100%;margin-top:16px;padding:16px;background:#07C160;color:#fff;border:none;border-radius:14px;font-size:18px;font-weight:600;cursor:pointer}
 .btn:active{opacity:0.85}
-.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.8);color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;opacity:0;transition:opacity 0.3s;z-index:99}
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.85);color:#fff;padding:14px 28px;border-radius:10px;font-size:15px;opacity:0;transition:opacity .3s;z-index:99;pointer-events:none}
 .toast.show{opacity:1}
 </style>
 </head>
 <body>
-<div class="page">
+<div class="page" id="app">
   <div class="title">🤝 添加好友</div>
-  <div class="sub">长按下方二维码添加微信</div>
+  <div class="sub" id="subtitle">复制下方微信号，打开微信添加</div>
   <div class="card">
-    <div class="qr-wrap">
-      <img src="qrcode.png" alt="微信二维码" id="qrImg" />
-    </div>
+    <div class="wx-label">微信号</div>
+    <div class="wx-id" id="wxId">加载中...</div>
+    <button class="btn" onclick="copyWx()">📋 复制微信号</button>
     <div class="hint">
-      <strong>长按识别二维码</strong><br>
-      添加微信好友 · 获取更多内容
+      <strong>怎么添加？</strong><br>
+      1. 点上方按钮复制微信号<br>
+      2. 打开微信 → 右上角 + → 添加朋友<br>
+      3. 粘贴微信号搜索 → 添加好友 ✅
     </div>
-    <button class="btn" onclick="saveImg()">💾 保存二维码到相册</button>
   </div>
 </div>
-<div class="toast" id="toast">请长按二维码图片保存</div>
+<div class="toast" id="toast"></div>
 
 <script>
-function saveImg() {
-  var toast = document.getElementById('toast');
-  toast.textContent = '请长按上方二维码图片 → 保存到相册 → 微信扫一扫添加';
-  toast.classList.add('show');
-  setTimeout(function(){ toast.classList.remove('show'); }, 3000);
+var wxId = new URLSearchParams(location.search).get('wx') || '未设置';
+document.getElementById('wxId').textContent = wxId;
+
+function copyWx() {
+  var id = document.getElementById('wxId').textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(id).then(showToast);
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = id;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast();
+  }
+}
+
+function showToast() {
+  var t = document.getElementById('toast');
+  t.textContent = '已复制！打开微信 → 添加朋友 → 粘贴搜索';
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
 }
 </script>
 </body>
